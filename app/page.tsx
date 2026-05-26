@@ -300,11 +300,11 @@ export default function Home() {
                 type="button"
                 onClick={() => void handleStart()}
                 disabled={loading || !team.trim()}
-                className="team-gradient-btn mt-1 flex items-center justify-center gap-2 rounded-xl px-5 py-3.5 font-bold text-white transition disabled:cursor-not-allowed disabled:opacity-50"
+                className="team-gradient-btn mt-1 flex items-center justify-center gap-2 rounded-xl px-5 py-3.5 font-bold transition disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {loading ? (
                   <>
-                    <LoadingDots />
+                    <LoadingDots dotColor={previewTheme.gradientText} />
                     Warming up the burns...
                   </>
                 ) : (
@@ -390,7 +390,7 @@ export default function Home() {
                 type="button"
                 onClick={() => void handleSend()}
                 disabled={loading || !input.trim()}
-                className="team-gradient-btn flex h-[52px] w-full shrink-0 items-center justify-center gap-2 rounded-2xl px-6 font-bold text-white transition disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
+                className="team-gradient-btn flex h-[52px] w-full shrink-0 items-center justify-center gap-2 rounded-2xl px-6 font-bold transition disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
               >
                 Send
               </button>

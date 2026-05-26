@@ -8,6 +8,9 @@
   --team-secondary: #52525b;
   --team-primary-rgb: 63, 63, 70;
   --team-secondary-rgb: 82, 82, 91;
+  --team-primary-text: #ffffff;
+  --team-secondary-text: #ffffff;
+  --team-gradient-text: #ffffff;
 }
 
 @theme inline {
@@ -62,6 +65,7 @@ body {
     var(--team-primary),
     var(--team-secondary)
   );
+  color: var(--team-gradient-text);
   box-shadow: 0 10px 25px rgba(var(--team-primary-rgb), 0.35);
 }
 
@@ -71,7 +75,7 @@ body {
     var(--team-primary),
     var(--team-secondary)
   );
-  color: #fff;
+  color: var(--team-gradient-text);
   box-shadow: 0 8px 20px rgba(var(--team-primary-rgb), 0.28);
 }
 
@@ -81,6 +85,7 @@ body {
     var(--team-primary),
     var(--team-secondary)
   );
+  color: var(--team-gradient-text);
   box-shadow: 0 10px 25px rgba(var(--team-primary-rgb), 0.35);
 }
 

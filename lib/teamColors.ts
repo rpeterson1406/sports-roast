@@ -5,9 +5,14 @@ export type TeamTheme = {
   secondaryRgb: string;
   primaryText: string;
   secondaryText: string;
+  /** Text on primary→secondary gradients (logos, buttons) */
+  gradientText: string;
   matched: boolean;
   matchedName?: string;
 };
+
+const LIGHT_TEXT = "#ffffff";
+const DARK_TEXT = "#111827";
 
 type TeamEntry = {
   name: string;
@@ -16,15 +21,7 @@ type TeamEntry = {
   aliases: string[];
 };
 
-const DEFAULT_THEME: TeamTheme = {
-  primary: "#3f3f46",
-  secondary: "#52525b",
-  primaryRgb: "63, 63, 70",
-  secondaryRgb: "82, 82, 91",
-  primaryText: "#ffffff",
-  secondaryText: "#ffffff",
-  matched: false,
-};
+const DEFAULT_THEME = buildTheme("#3f3f46", "#52525b", false);
 
 const TEAM_DATABASE: TeamEntry[] = [
   { name: "Arizona Cardinals", primary: "#97233F", secondary: "#000000", aliases: ["cardinals", "arizona cardinals"] },
@@ -127,8 +124,28 @@ function getRelativeLuminance(hex: string) {
   return 0.2126 * red + 0.7152 * green + 0.0722 * blue;
 }
 
+function getContrastRatio(luminanceA: number, luminanceB: number) {
+  const lighter = Math.max(luminanceA, luminanceB);
+  const darker = Math.min(luminanceA, luminanceB);
+  return (lighter + 0.05) / (darker + 0.05);
+}
+
+/** Pick white or near-black text by WCAG contrast (handles light greys, silver, gold). */
 export function getContrastTextColor(hex: string) {
-  return getRelativeLuminance(hex) > 0.5 ? "#0a0f0d" : "#ffffff";
+  const background = getRelativeLuminance(hex);
+  const whiteContrast = getContrastRatio(background, 1);
+  const darkContrast = getContrastRatio(background, getRelativeLuminance(DARK_TEXT));
+
+  return whiteContrast >= darkContrast ? LIGHT_TEXT : DARK_TEXT;
+}
+
+/** Gradient buttons/logos span both swatches — contrast against the lighter one. */
+export function getOnGradientTextColor(primary: string, secondary: string) {
+  const primaryLuminance = getRelativeLuminance(primary);
+  const secondaryLuminance = getRelativeLuminance(secondary);
+  const lighterSwatch =
+    primaryLuminance >= secondaryLuminance ? primary : secondary;
+  return getContrastTextColor(lighterSwatch);
 }
 
 function hslToHex(h: number, s: number, l: number) {
@@ -174,6 +191,7 @@ function buildTheme(primary: string, secondary: string, matched: boolean, matche
     secondaryRgb: hexToRgb(secondary),
     primaryText: getContrastTextColor(primary),
     secondaryText: getContrastTextColor(secondary),
+    gradientText: getOnGradientTextColor(primary, secondary),
     matched,
     matchedName,
   };
@@ -237,5 +255,8 @@ export function getTeamThemeStyle(theme: TeamTheme): Record<string, string> {
     "--team-secondary": theme.secondary,
     "--team-primary-rgb": theme.primaryRgb,
     "--team-secondary-rgb": theme.secondaryRgb,
+    "--team-primary-text": theme.primaryText,
+    "--team-secondary-text": theme.secondaryText,
+    "--team-gradient-text": theme.gradientText,
   };
 }
