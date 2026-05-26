@@ -1,9 +1,13 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0a0f0d;
-  --foreground: #ecfdf5;
-  --field-line: rgba(255, 255, 255, 0.04);
+  --background: #1c2421;
+  --foreground: #f4f4f5;
+  --muted: #a1a1aa;
+  --surface: #27272a;
+  --surface-input: #3f3f46;
+  --border-subtle: rgba(255, 255, 255, 0.18);
+  --field-line: rgba(255, 255, 255, 0.07);
   --team-primary: #3f3f46;
   --team-secondary: #52525b;
   --team-primary-rgb: 63, 63, 70;
@@ -24,6 +28,8 @@ body {
   background-color: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
 }
 
 .team-themed {
@@ -31,12 +37,12 @@ body {
   background-image:
     radial-gradient(
       circle at 15% 0%,
-      rgba(var(--team-primary-rgb), 0.2),
+      rgba(var(--team-primary-rgb), 0.12),
       transparent 42%
     ),
     radial-gradient(
       circle at 85% 100%,
-      rgba(var(--team-secondary-rgb), 0.16),
+      rgba(var(--team-secondary-rgb), 0.1),
       transparent 46%
     ),
     repeating-linear-gradient(
@@ -124,8 +130,30 @@ body {
 }
 
 select option {
-  background: #111827;
-  color: #ecfdf5;
+  background: var(--surface);
+  color: var(--foreground);
+}
+
+.readable-surface {
+  background-color: color-mix(in srgb, var(--surface) 88%, white 12%);
+  border-color: var(--border-subtle);
+}
+
+.readable-input {
+  background-color: var(--surface-input);
+  border-color: var(--border-subtle);
+  color: var(--foreground);
+}
+
+.readable-input::placeholder {
+  color: var(--muted);
+}
+
+.chat-bubble-text {
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  font-weight: 500;
+  letter-spacing: 0.01em;
 }
 
 @keyframes message-in {

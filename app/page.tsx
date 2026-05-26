@@ -196,7 +196,7 @@ export default function Home() {
       className="team-themed flex min-h-dvh flex-col"
       style={teamThemeStyle}
     >
-      <header className="sticky top-0 z-20 border-b border-white/10 bg-zinc-950/90 px-4 py-4 shadow-lg shadow-black/30 backdrop-blur-md sm:px-6">
+      <header className="sticky top-0 z-20 border-b border-white/20 bg-zinc-800/95 px-4 py-4 shadow-lg shadow-black/20 backdrop-blur-md sm:px-6">
         <div className="mx-auto flex max-w-3xl items-center gap-3">
           <div className="team-header-icon flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl text-xl ring-1 ring-white/20">
             🔥
@@ -205,8 +205,8 @@ export default function Home() {
             <h1 className="truncate text-xl font-black tracking-tight text-white sm:text-2xl">
               Sports Roast
             </h1>
-            <p className="truncate text-sm text-zinc-400">
-              Dark mode trash talk arena
+            <p className="truncate text-sm text-zinc-300">
+              AI trash talk arena
             </p>
           </div>
         </div>
@@ -214,14 +214,14 @@ export default function Home() {
 
       {!started ? (
         <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col justify-center px-4 py-6 sm:px-6">
-          <div className="team-panel-accent rounded-3xl border bg-zinc-900/70 p-5 shadow-2xl shadow-black/40 backdrop-blur sm:p-8">
+          <div className="team-panel-accent readable-surface rounded-3xl border p-5 shadow-2xl shadow-black/25 backdrop-blur sm:p-8">
             <div className="mb-6 flex flex-col items-center gap-4 text-center sm:flex-row sm:text-left">
               <TeamLogoPlaceholder initials={teamInitials} size="lg" />
               <div>
                 <h2 className="text-xl font-bold text-white sm:text-2xl">
                   Pick your team. Brace for impact.
                 </h2>
-                <p className="mt-1 text-sm text-zinc-400">
+                <p className="mt-1 text-sm text-zinc-300">
                   Enter any team and choose how savage you want the roasts.
                 </p>
               </div>
@@ -229,7 +229,7 @@ export default function Home() {
 
             <div className="flex flex-col gap-4">
               <label className="flex flex-col gap-2">
-                <span className="text-sm font-semibold text-zinc-300">
+                <span className="text-sm font-semibold text-zinc-200">
                   Favorite team
                 </span>
                 <input
@@ -240,13 +240,13 @@ export default function Home() {
                     if (event.key === "Enter") void handleStart();
                   }}
                   placeholder="e.g. Dallas Cowboys, Lakers, Manchester United"
-                  className="team-input rounded-xl border border-white/10 bg-zinc-950/80 px-4 py-3 text-white placeholder:text-zinc-500 transition"
+                  className="team-input readable-input rounded-xl border px-4 py-3 text-base transition"
                   disabled={loading}
                 />
               </label>
 
               {team.trim() && (
-                <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-zinc-950/50 px-3 py-2">
+                <div className="readable-surface flex items-center gap-3 rounded-xl border px-3 py-2">
                   <div className="flex gap-1.5">
                     <span
                       className="team-color-chip h-6 w-6 rounded-full"
@@ -259,7 +259,7 @@ export default function Home() {
                       title="Secondary team color"
                     />
                   </div>
-                  <p className="text-xs text-zinc-400">
+                  <p className="text-sm text-zinc-300">
                     {previewTheme.matched
                       ? `Colors matched: ${previewTheme.matchedName}`
                       : "Custom colors generated for your team"}
@@ -268,7 +268,7 @@ export default function Home() {
               )}
 
               <label className="flex flex-col gap-2">
-                <span className="text-sm font-semibold text-zinc-300">
+                <span className="text-sm font-semibold text-zinc-200">
                   Roast level
                 </span>
                 <select
@@ -276,7 +276,7 @@ export default function Home() {
                   onChange={(event) =>
                     setRoastLevel(event.target.value as RoastLevel)
                   }
-                  className="team-select rounded-xl border border-white/10 bg-zinc-950/80 px-4 py-3 text-white transition"
+                  className="team-select readable-input rounded-xl border px-4 py-3 text-base transition"
                   disabled={loading}
                 >
                   {ROAST_LEVELS.map((level) => (
@@ -316,11 +316,11 @@ export default function Home() {
         </main>
       ) : (
         <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col overflow-hidden">
-          <div className="flex shrink-0 items-center justify-between gap-3 border-b border-white/10 bg-zinc-900/60 px-4 py-3 sm:px-6">
+          <div className="readable-surface flex shrink-0 items-center justify-between gap-3 border-b px-4 py-3 sm:px-6">
             <div className="flex min-w-0 items-center gap-3">
               <TeamLogoPlaceholder initials={teamInitials} size="sm" pulse />
               <div className="min-w-0">
-                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500">
+                <p className="text-xs font-bold uppercase tracking-[0.2em] text-zinc-400">
                   Your team
                 </p>
                 <p className="truncate font-bold text-white">{activeTeam}</p>
@@ -336,7 +336,7 @@ export default function Home() {
                 type="button"
                 onClick={handleReset}
                 disabled={loading}
-                className="team-hover-reset rounded-lg border border-white/10 px-3 py-1.5 text-sm font-semibold text-zinc-300 transition disabled:opacity-50"
+                className="team-hover-reset rounded-lg border border-white/20 bg-zinc-700/50 px-3 py-1.5 text-sm font-semibold text-zinc-100 transition disabled:opacity-50"
               >
                 Reset
               </button>
@@ -351,7 +351,7 @@ export default function Home() {
           >
             {visibleMessages.length === 0 && !loading && (
               <div className="flex flex-1 items-center justify-center">
-                <p className="text-sm text-zinc-500">Waiting for the first roast...</p>
+                <p className="text-base text-zinc-400">Waiting for the first roast...</p>
               </div>
             )}
 
@@ -367,7 +367,7 @@ export default function Home() {
             {loading && <TypingIndicator teamTheme={teamTheme} />}
           </div>
 
-          <div className="sticky bottom-0 z-10 border-t border-white/10 bg-zinc-950/95 px-4 py-3 shadow-[0_-8px_30px_rgba(0,0,0,0.35)] backdrop-blur-md sm:px-6 sm:py-4">
+          <div className="sticky bottom-0 z-10 border-t border-white/20 bg-zinc-800/98 px-4 py-3 shadow-[0_-8px_30px_rgba(0,0,0,0.25)] backdrop-blur-md sm:px-6 sm:py-4">
             {error && (
               <div className="mb-3">
                 <ErrorBanner message={error} />
@@ -384,7 +384,7 @@ export default function Home() {
                 rows={2}
                 disabled={loading}
                 aria-label="Message input"
-                className="team-textarea min-h-[52px] flex-1 resize-none rounded-2xl border border-white/10 bg-zinc-900/80 px-4 py-3 text-base text-white placeholder:text-zinc-500 transition disabled:opacity-60 sm:text-sm"
+                className="team-textarea readable-input min-h-[52px] flex-1 resize-none rounded-2xl border px-4 py-3 text-base transition disabled:opacity-60"
               />
               <button
                 type="button"
@@ -395,10 +395,10 @@ export default function Home() {
                 Send
               </button>
             </div>
-            <p className="mt-2 hidden text-center text-xs text-zinc-500 sm:block">
+            <p className="mt-2 hidden text-center text-sm text-zinc-400 sm:block">
               Press Enter to send · Shift+Enter for a new line
             </p>
-            <p className="mt-2 text-center text-xs text-zinc-500 sm:hidden">
+            <p className="mt-2 text-center text-sm text-zinc-400 sm:hidden">
               Enter to send
             </p>
           </div>
@@ -466,16 +466,14 @@ function ChatBubble({
         }`}
       >
         <span
-          className="mb-1 block px-1 text-[10px] font-bold uppercase tracking-wider"
-          style={{
-            color: bubbleBackground,
-            textAlign: isUser ? "right" : "left",
-          }}
+          className={`mb-1 block px-1 text-xs font-bold uppercase tracking-wider text-zinc-300 ${
+            isUser ? "text-right" : "text-left"
+          }`}
         >
           {isUser ? "You" : "Roast Bot"}
         </span>
         <div
-          className={`rounded-2xl px-4 py-3 text-sm leading-relaxed shadow-md sm:text-[15px] ${
+          className={`chat-bubble-text rounded-2xl px-4 py-3.5 shadow-md ring-1 ring-black/15 ${
             isUser ? "rounded-br-md" : "rounded-bl-md"
           }`}
           style={{
@@ -509,14 +507,11 @@ function TypingIndicator({
         🤖
       </div>
       <div>
-        <span
-          className="mb-1 block px-1 text-[10px] font-bold uppercase tracking-wider"
-          style={{ color: teamTheme.secondary }}
-        >
+        <span className="mb-1 block px-1 text-xs font-bold uppercase tracking-wider text-zinc-300">
           Roast Bot
         </span>
         <div
-          className="flex items-center gap-1.5 rounded-2xl rounded-bl-md px-4 py-3 shadow-md"
+          className="chat-bubble-text flex items-center gap-1.5 rounded-2xl rounded-bl-md px-4 py-3.5 shadow-md ring-1 ring-black/15"
           style={{
             backgroundColor: teamTheme.secondary,
             color: teamTheme.secondaryText,
@@ -526,7 +521,7 @@ function TypingIndicator({
           aria-label="Roast bot is typing"
         >
           <LoadingDots dotColor={teamTheme.secondaryText} />
-          <span className="text-sm opacity-85">Cooking up a comeback...</span>
+          <span className="opacity-90">Cooking up a comeback...</span>
         </div>
       </div>
     </div>
@@ -556,7 +551,7 @@ function ErrorBanner({ message }: { message: string }) {
   return (
     <div
       role="alert"
-      className="rounded-xl border border-red-500/40 bg-red-950/50 px-4 py-3 text-sm text-red-200"
+      className="rounded-xl border border-red-400/50 bg-red-900/60 px-4 py-3 text-base text-red-100"
     >
       {message}
     </div>
