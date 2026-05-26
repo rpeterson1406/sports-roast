@@ -2,6 +2,7 @@ import OpenAI from "openai";
 import { NextResponse } from "next/server";
 
 import { ROAST_LEVELS, type ChatMessage, type RoastLevel } from "@/lib/types";
+import { getVerifiedTeamContext } from "@/lib/teamSeasonContext";
 
 type RoastRequest = {
   team: string;
@@ -54,7 +55,7 @@ function shouldIncludeLocalRef(messages: ChatMessage[]) {
 function buildSystemPrompt(
   team: string,
   roastLevel: RoastLevel,
-  options: { includeLocalRef: boolean },
+  options: { includeLocalRef: boolean; verifiedContext: string },
 ) {
   const todaysDate = getTodaysDate();
   const promptRoastLevel = mapRoastLevelForPrompt(roastLevel);
@@ -99,49 +100,18 @@ Intensity guide:
 
 Recency and freshness context (CRITICAL — follow before EVERY reply):
 - Today's date: ${todaysDate}
-- Default to the most recently completed season for the user's league unless the user specifies otherwise.
-- Prioritize:
-  1. Most recent season
-  2. Current offseason storylines
-  3. Current roster/coaching drama
-  4. Recent playoff failures
-  5. Fanbase behavior
-  6. Older history only when clearly framed as old
+- For records, standings, playoff seeding, and season results: use ONLY the VERIFIED TEAM CONTEXT block below.
+- Do not use outdated facts from model memory/training data.
+- Prioritize current offseason narratives, roster/coaching drama, and fan behavior when verified stats are unavailable.
+- Older history is allowed only when clearly labeled as old and contrasted with the verified season.
+
+${options.verifiedContext}
 
 Freshness verification rules:
-- Before referencing:
-  - win/loss record
-  - playoff finish
-  - trades
-  - coaching changes
-  - QB situations
-  - injuries
-  - offseason drama
-  - free agency
-  - draft picks
-  internally verify it belongs to the current or most recently completed season.
-- NEVER confidently state outdated sports facts as current.
+- The VERIFIED TEAM CONTEXT block above is ground truth. If it says a team won the Super Bowl or went 14-3, you MUST NOT claim the opposite (e.g. never say 9-8 or an early playoff exit for a champion).
 - NEVER invent statistics, records, transactions, or news.
-- If uncertain about a fact:
-  - do NOT guess
-  - avoid exact statistics
-  - pivot to broader current narratives instead.
-
-Current standings and season verification rules:
-- Before generating a roast, internally look up and verify:
-  - the team's current season record (if the season is underway)
-  - division and conference standings
-  - playoff position/elimination status
-  - the most recently completed season record
-  - last playoff result
-- If the current season is underway:
-  - prioritize current standings and current-season performance in jokes.
-- If the current season is not underway:
-  - prioritize the most recently completed season.
-- Never use outdated standings or records when newer verified information exists.
-- If uncertain about exact numbers:
-  - avoid exact stats
-  - pivot to broader narratives instead.
+- If VERIFIED TEAM CONTEXT is missing a detail, do not guess — avoid exact statistics and pivot to broader narratives.
+- NEVER confidently state outdated sports facts as current.
 
 When uncertain, prefer:
 - playoff disappointment
@@ -286,6 +256,7 @@ export async function POST(request: Request) {
 
     const openai = getOpenAIClient();
     const includeLocalRef = shouldIncludeLocalRef(messages);
+    const verifiedContext = await getVerifiedTeamContext(team);
 
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
@@ -294,7 +265,10 @@ export async function POST(request: Request) {
       messages: [
         {
           role: "system",
-          content: buildSystemPrompt(team, roastLevel, { includeLocalRef }),
+          content: buildSystemPrompt(team, roastLevel, {
+            includeLocalRef,
+            verifiedContext,
+          }),
         },
         ...messages.map((message) => ({
           role: message.role,
